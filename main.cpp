@@ -140,6 +140,60 @@ static void test_array() {
     
     ASSERT(dist5.size() == 3);
     ASSERT(dist2.size() == 0);
+    
+    dist1.clear();
+    dist2.clear();
+    
+    ASSERT(dist1.is_empty());
+    ASSERT(dist2.is_empty());
+    
+    for (int i = 10; i < 15; ++i) {
+        dist1.add_element(i, 1.5);
+    }
+    
+    // Test move assignment:
+    dist2 = std::move(dist1);
+    
+    for (int i = 10; i < 15; ++i) {
+        ASSERT(dist2.contains(i));
+        ASSERT(dist1.contains(i) == false);
+    }
+    
+    // Test move constructor:
+    ArrayProbabilityDistribution<int> dist6(std::move(dist2));
+    
+    for (int i = 10; i < 15; ++i) {
+        ASSERT(dist6.contains(i));
+        ASSERT(dist2.contains(i) == false);
+    }
+    
+    // Test copy constructor:
+    ArrayProbabilityDistribution<int> dist7(dist6);
+    dist7.remove(14);
+    
+    for (int i = 10; i < 14; ++i) {
+        ASSERT(dist6.contains(i));
+        ASSERT(dist7.contains(i));
+    }
+    
+    ASSERT(dist6.contains(14));
+    ASSERT(dist7.contains(14) == false);
+    
+    ASSERT(dist6.size() == 5);
+    ASSERT(dist7.size() == 4);
+    
+    // Test copy assignment:
+    dist1.clear();
+    dist1 = dist6;
+    
+    ASSERT(dist6.size() == 5);
+    ASSERT(dist1.size() == 5);
+    
+    ASSERT(dist1.remove(11));
+    ASSERT(dist1.remove(13));
+    
+    ASSERT(dist6.size() == 5);
+    ASSERT(dist1.size() == 3);
 }
 
 static void test_linked_list() {
@@ -176,6 +230,61 @@ static void test_linked_list() {
     
     ASSERT(dist5.size() == 3);
     ASSERT(dist2.size() == 0);
+    
+    dist1.clear();
+    dist2.clear();
+    
+    ASSERT(dist1.is_empty());
+    ASSERT(dist2.is_empty());
+    
+    for (int i = 10; i < 15; ++i) {
+        dist1.add_element(i, 1.5);
+    }
+    
+    // Test move assignment:
+    dist2 = std::move(dist1);
+    
+    for (int i = 10; i < 15; ++i) {
+        ASSERT(dist2.contains(i));
+        ASSERT(dist1.contains(i) == false);
+    }
+    
+    // Test move constructor:
+    LinkedListProbabilityDistribution<int> dist6(std::move(dist2));
+    
+    for (int i = 10; i < 15; ++i) {
+        ASSERT(dist6.contains(i));
+        ASSERT(dist2.contains(i) == false);
+    }
+    
+    // Test copy constructor:
+    LinkedListProbabilityDistribution<int> dist7(dist6);
+    dist7.remove(14);
+    
+    for (int i = 10; i < 14; ++i) {
+        ASSERT(dist6.contains(i));
+        ASSERT(dist7.contains(i));
+    }
+    
+    ASSERT(dist6.contains(14));
+    ASSERT(dist7.contains(14) == false);
+    
+    ASSERT(dist6.size() == 5);
+    ASSERT(dist7.size() == 4);
+    
+    // Test copy assignment:
+    dist1.clear();
+    dist1 = dist6;
+    
+    ASSERT(dist6.size() == 5);
+    ASSERT(dist1.size() == 5);
+    
+    ASSERT(dist1.remove(11));
+    ASSERT(dist1.remove(13));
+    
+    ASSERT(dist6.size() == 5);
+    ASSERT(dist1.size() == 3);
+
 }
 
 static void test_tree() {
@@ -213,4 +322,58 @@ static void test_tree() {
     
     ASSERT(dist5.size() == 3);
     ASSERT(dist2.size() == 0);
+    
+    dist1.clear();
+    dist2.clear();
+    
+    ASSERT(dist1.is_empty());
+    ASSERT(dist2.is_empty());
+    
+    for (int i = 10; i < 15; ++i) {
+        dist1.add_element(i, 1.5);
+    }
+    
+    // Test move assignment:
+    dist2 = std::move(dist1);
+    
+    for (int i = 10; i < 15; ++i) {
+        ASSERT(dist2.contains(i));
+        ASSERT(dist1.contains(i) == false);
+    }
+    
+    // Test move constructor:
+    BinaryTreeProbabilityDistribution<int> dist6(std::move(dist2));
+    
+    for (int i = 10; i < 15; ++i) {
+        ASSERT(dist6.contains(i));
+        ASSERT(dist2.contains(i) == false);
+    }
+    
+    // Test copy constructor:
+    BinaryTreeProbabilityDistribution<int> dist7(dist6);
+    dist7.remove(14);
+    
+    for (int i = 10; i < 14; ++i) {
+        ASSERT(dist6.contains(i));
+        ASSERT(dist7.contains(i));
+    }
+    
+    ASSERT(dist6.contains(14));
+    ASSERT(dist7.contains(14) == false);
+    
+    ASSERT(dist6.size() == 5);
+    ASSERT(dist7.size() == 4);
+    
+    // Test copy assignment:
+    dist1.clear();
+    dist1 = dist6;
+    
+    ASSERT(dist6.size() == 5);
+    ASSERT(dist1.size() == 5);
+
+    ASSERT(dist1.remove(11));
+    ASSERT(dist1.remove(13));
+    
+    ASSERT(dist6.size() == 5);
+    ASSERT(dist1.size() == 3);
 }

@@ -174,7 +174,7 @@ namespace util {
         }
                 
         virtual bool contains(T const& element) const {
-            return m_map.find(element) != m_map.cend();
+            return m_map.find(element) != m_map.end();
         }
                 
         virtual bool remove(T const& element) {
@@ -252,6 +252,7 @@ namespace util {
                                                  source_head->get_weight()};
             
             m_head->set_prev_linked_list_node(nullptr);
+            m_map[m_head->get_element()] = m_head;
             
             for (LinkedListNode* node =
                     source_head->get_next_linked_list_node();
