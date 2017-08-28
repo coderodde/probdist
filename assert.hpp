@@ -7,6 +7,7 @@
 #define REPORT            assert.report();
 #define TOTAL_ASSERTIONS  assert.get_total_number_of_assertions()
 #define FAILED_ASSERTIONS assert.get_number_of_failed_assertions()
+#define FAIL(MSG)         assert.fail(MSG)
 
 class Assert {
 public:
@@ -17,6 +18,7 @@ public:
     
     size_t get_total_number_of_assertions() const;
     size_t get_number_of_failed_assertions() const;
+    void fail(const char* msg);
     void report() const;
     
 private:

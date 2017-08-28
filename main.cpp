@@ -59,6 +59,49 @@ static void test_all() {
 
 static void test_impl(ProbabilityDistribution<int>* dist) {
     ASSERT(dist->is_empty());
+    
+    for (int i = 0; i < 4; ++i) {
+        ASSERT(dist->size() == i);
+        dist->add_element(i, 1.0);
+        ASSERT(dist->size() == i + 1);
+    }
+    
+    ASSERT(dist->is_empty() == false);
+    
+    for (int i = 0; i < 4; ++i) {
+        ASSERT(dist->contains(i));
+    }
+    
+    ASSERT(dist->contains(-1) == false);
+    
+    for (int i = 4; i < 10; ++i) {
+        ASSERT(dist->contains(i) == false);
+    }
+    
+    for (int i = 0; i < 4; ++i) {
+        ASSERT(dist->add_element(i, 2.0) == false);
+    }
+    
+    for (int i = 0; i < 4; ++i) {
+        ASSERT(dist->remove(i));
+    }
+    
+    for (int i = 0; i < 4; ++i) {
+        ASSERT(dist->remove(i) == false);
+    }
+    
+    try {
+        dist->sample_element();
+        FAIL("std::length_error expected.");
+    } catch (std::length_error err) {}
+    
+    for (int i = 0; i < 4; ++i) {
+        dist->add_element(i, 2.0);
+    }
+    
+    ASSERT(dist->size() == 4);
+    dist->clear();
+    ASSERT(dist->size() == 0);
 }
 
 static void test_array() {

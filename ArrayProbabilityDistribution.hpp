@@ -80,9 +80,12 @@ namespace util {
             auto target_weight_iterator = m_weight_storage_vector.begin();
             std::advance(target_weight_iterator, target_index);
             
+            double weight = m_weight_storage_vector[target_index];
             m_weight_storage_vector.erase(target_weight_iterator);
             m_filter_set.erase(element);
             
+            this->m_size--;
+            this->m_total_weight -= weight;
             return true;
         }
         

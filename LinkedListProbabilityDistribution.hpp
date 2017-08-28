@@ -154,7 +154,10 @@ namespace util {
                      node->get_next_linked_list_node());
             } else {
                 m_head = node->get_next_linked_list_node();
-                m_head->set_prev_linked_list_node(nullptr);
+                
+                if (m_head != nullptr) {
+                    m_head->set_prev_linked_list_node(nullptr);
+                }
             }
             
             if (next_node != nullptr) {
@@ -162,7 +165,10 @@ namespace util {
                      node->get_prev_linked_list_node());
             } else {
                 m_tail = node->get_prev_linked_list_node();
-                m_tail->set_next_linked_list_node(nullptr);
+                
+                if (m_tail != nullptr) {
+                    m_tail->set_next_linked_list_node(nullptr);
+                }
             }
             
             delete node;
