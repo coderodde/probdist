@@ -28,12 +28,11 @@ namespace util {
         }
         
         virtual bool add_element(T const& element, double weight) {
-            this->check_weight(weight);
-            
             if (m_filter_set.find(element) != m_filter_set.cend()) {
                 return false;
             }
             
+            this->check_weight(weight);
             m_element_storage_vector.push_back(element);
             m_weight_storage_vector.push_back(weight);
             m_filter_set.insert(element);
@@ -42,7 +41,7 @@ namespace util {
             return true;
         }
         
-        virtual T& sample_element () {
+        virtual T sample_element() {
             this->check_not_empty();
             double value = this->m_real_distribution(this->m_generator) *
                            this->m_total_weight;

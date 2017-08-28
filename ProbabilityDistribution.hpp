@@ -38,7 +38,7 @@ namespace util {
         }
         
         virtual bool add_element    (T const& element, double weight) = 0;
-        virtual T&   sample_element ()                                = 0;
+        virtual T    sample_element ()                                = 0;
         virtual bool contains       (T const& element)          const = 0;
         virtual bool remove         (T const& element)                = 0;
         virtual void clear          ()                                = 0;
