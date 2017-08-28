@@ -180,4 +180,37 @@ static void test_linked_list() {
 
 static void test_tree() {
     test_impl(new BinaryTreeProbabilityDistribution<int>);
+    
+    
+    BinaryTreeProbabilityDistribution<int> dist1;
+    BinaryTreeProbabilityDistribution<int> dist2;
+    
+    for (int i = 0; i < 3; ++i) {
+        dist2.add_element(i, 1.0);
+    }
+    
+    ASSERT(dist1.size() == 0);
+    ASSERT(dist2.size() == 3);
+    
+    dist1 = dist2;
+    
+    ASSERT(dist1.size() == 3);
+    ASSERT(dist2.size() == 3);
+    
+    BinaryTreeProbabilityDistribution<int> dist3(dist1);
+    
+    ASSERT(dist1.size() == 3);
+    ASSERT(dist2.size() == 3);
+    ASSERT(dist3.size() == 3);
+    
+    BinaryTreeProbabilityDistribution<int> dist4;
+    dist4 = std::move(dist1);
+    
+    ASSERT(dist1.size() == 0);
+    ASSERT(dist4.size() == 3);
+    
+    BinaryTreeProbabilityDistribution<int> dist5(std::move(dist2));
+    
+    ASSERT(dist5.size() == 3);
+    ASSERT(dist2.size() == 0);
 }

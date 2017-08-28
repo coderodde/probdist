@@ -186,7 +186,7 @@ namespace util {
         }
         
         virtual bool contains(T const& element) const {
-            return m_map.find(element) != m_map.cend();
+            return m_map.find(element) != m_map.end();
         }
         
         virtual T sample_element() {
@@ -215,6 +215,7 @@ namespace util {
             
             TreeNode* node = m_map[element];
             delete_node(node);
+            m_map.erase(element);
             update_metadata(node->get_parent(), -node->get_weight(), -1);
             this->m_size--;
             this->m_total_weight -= node->get_weight();
@@ -347,6 +348,7 @@ namespace util {
             
             new_node->set_left_child (copy_tree_impl(node->get_left_child()));
             new_node->set_right_child(copy_tree_impl(node->get_right_child()));
+            return new_node;
         }
         
         void copy_tree(TreeNode* copy_root) {
