@@ -1,6 +1,14 @@
 #include "ArrayProbabilityDistribution.hpp"
 #include "LinkedListProbabilityDistribution.hpp"
+#include "ProbabilityDistribution.hpp"
+#include "assert.hpp"
 #include <iostream>
+
+using net::coderodde::util::ProbabilityDistribution;
+using net::coderodde::util::ArrayProbabilityDistribution;
+using net::coderodde::util::LinkedListProbabilityDistribution;
+
+static void test_all();
 
 int main() {
     using net::coderodde::util::ArrayProbabilityDistribution;
@@ -34,4 +42,33 @@ int main() {
     for (int i = 1; i < 4; ++i) {
         std::cout << arr2[i] << "\n";
     }
+    
+    test_all();
+    REPORT
+}
+
+static void test_array();
+static void test_linked_list();
+static void test_tree();
+
+static void test_all() {
+    test_array();
+    test_linked_list();
+    test_tree();
+}
+
+static void test_impl(ProbabilityDistribution<int>* dist) {
+    ASSERT(dist->is_empty());
+}
+
+static void test_array() {
+    test_impl(new ArrayProbabilityDistribution<int>);
+}
+
+static void test_linked_list() {
+    test_impl(new LinkedListProbabilityDistribution<int>);
+}
+
+static void test_tree() {
+    
 }
