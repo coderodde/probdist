@@ -16,8 +16,8 @@ namespace util {
     
     public:
         ArrayProbabilityDistribution() : ProbabilityDistribution<T>() {}
-        ArrayProbabilityDistribution(std::random_device& rd) :
-        ProbabilityDistribution<T>(rd) {}
+        ArrayProbabilityDistribution(std::random_device::result_type seed) :
+        ProbabilityDistribution<T>(seed) {}
         
         bool is_empty() const {
             return this->m_size == 0;

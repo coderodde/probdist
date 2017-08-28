@@ -4,7 +4,9 @@
 int main() {
     using net::coderodde::util::ArrayProbabilityDistribution;
     
-    ArrayProbabilityDistribution<int> prob_dist;
+    std::random_device rd{};
+    std::random_device::result_type seed = rd();
+    ArrayProbabilityDistribution<int> prob_dist{seed};
     
     prob_dist.add_element(1, 1.0);
     prob_dist.add_element(2, 1.0);

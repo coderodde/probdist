@@ -13,11 +13,11 @@ namespace util {
     template<typename T>
     class ProbabilityDistribution {
     public:
-        ProbabilityDistribution(std::random_device& rd)
+        ProbabilityDistribution(std::random_device::result_type seed)
         :
         m_size{0},
         m_total_weight{0.0},
-        m_generator{rd},
+        m_generator{seed},
         m_real_distribution{0.0, 1.0}
         {}
         
