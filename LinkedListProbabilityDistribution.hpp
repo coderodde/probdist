@@ -14,24 +14,23 @@ namespace util {
     template<typename T>
     class LinkedListProbabilityDistribution :
     public ProbabilityDistribution<T> {
-        
-    private:
-        template<typename E>
+
         class LinkedListNode {
         private:
             
-            E                  m_element;
-            double             m_weight;
-            LinkedListNode<E>* m_prev_node;
-            LinkedListNode<E>* m_next_node;
+            T               m_element;
+            double          m_weight;
+            LinkedListNode* m_prev_node;
+            LinkedListNode* m_next_node;
             
         public:
-            LinkedListNode(E element, double weight) {
+            
+            LinkedListNode(T element, double weight) {
                 m_element = element;
                 m_weight  = weight;
             }
             
-            E get_element() const {
+            T get_element() const {
                 return m_element;
             }
             
@@ -39,19 +38,19 @@ namespace util {
                 return m_weight;
             }
             
-            LinkedListNode<E>* get_prev_linked_list_node() const {
+            LinkedListNode* get_prev_linked_list_node() const {
                 return m_prev_node;
             }
             
-            LinkedListNode<E>* get_next_linked_list_node() const {
+            LinkedListNode* get_next_linked_list_node() const {
                 return m_next_node;
             }
             
-            void set_prev_linked_list_node(LinkedListNode<E>* node) {
+            void set_prev_linked_list_node(LinkedListNode* node) {
                 m_prev_node = node;
             }
             
-            void set_next_linked_list_node(LinkedListNode<E>* node) {
+            void set_next_linked_list_node(LinkedListNode* node) {
                 m_next_node = node;
             }
         };
@@ -135,8 +134,7 @@ namespace util {
             }
             
             this->check_weight(weight);
-            LinkedListNode<T>* new_node = new LinkedListNode<T>{element,
-                                                                weight};
+            LinkedListNode* new_node = new LinkedListNode{element, weight};
             
             if (m_head == nullptr) {
                 m_head = new_node;
@@ -161,7 +159,7 @@ namespace util {
             double value = this->m_real_distribution(this->m_generator) *
                            this->m_total_weight;
             
-            for (LinkedListNode<T>* node = m_head;
+            for (LinkedListNode* node = m_head;
                  ;
                  node = node->get_next_linked_list_node()) {
                 if (value < node->get_weight()) {
@@ -183,12 +181,13 @@ namespace util {
                 return false;
             }
             
-            LinkedListNode<T>* node = m_map[element];
+            LinkedListNode* node = m_map[element];
             
             m_map.erase(element);
             this->m_size--;
             this->m_total_weight -= node->get_weight();
             unlink(node);
+            delete node;
             return true;
         }
                 
@@ -197,7 +196,7 @@ namespace util {
             this->m_total_weight = 0.0;
             m_map.clear();
             
-            for (LinkedListNode<T>* node = m_head, *next; node != nullptr;) {
+            for (LinkedListNode* node = m_head, *next; node != nullptr;) {
                 next = node->get_next_linked_list_node();
                 delete node;
                 node = next;
@@ -208,13 +207,13 @@ namespace util {
         }
                 
     private:
-        std::unordered_map<T, LinkedListNode<T>*> m_map;
-        LinkedListNode<T>* m_head;
-        LinkedListNode<T>* m_tail;
+        std::unordered_map<T, LinkedListNode*> m_map;
+        LinkedListNode* m_head;
+        LinkedListNode* m_tail;
         
-        void unlink(LinkedListNode<T>* node) {
-            LinkedListNode<T>* prev_node = node->get_prev_linked_list_node();
-            LinkedListNode<T>* next_node = node->get_next_linked_list_node();
+        void unlink(LinkedListNode* node) {
+            LinkedListNode* prev_node = node->get_prev_linked_list_node();
+            LinkedListNode* next_node = node->get_next_linked_list_node();
             
             if (prev_node != nullptr) {
                 prev_node->set_next_linked_list_node(
@@ -237,36 +236,34 @@ namespace util {
                     m_tail->set_next_linked_list_node(nullptr);
                 }
             }
-            
-            delete node;
         }
         
         void delete_linked_list() {
-            for (LinkedListNode<T>* node = m_head, *next; node != nullptr;) {
+            for (LinkedListNode* node = m_head, *next; node != nullptr;) {
                 next = node->get_next_linked_list_node();
                 delete node;
                 node = next;
             }
         }
         
-        void copy_linked_list(LinkedListNode<T>* source_head) {
+        void copy_linked_list(LinkedListNode* source_head) {
             if (source_head == nullptr) {
                 m_head = nullptr;
                 m_tail = nullptr;
                 return;
             }
             
-            m_head = m_tail = new LinkedListNode<T>{source_head->get_element(),
+            m_head = m_tail = new LinkedListNode{source_head->get_element(),
                                                     source_head->get_weight()};
             
             m_head->set_prev_linked_list_node(nullptr);
             
-            for (LinkedListNode<T>* node =
+            for (LinkedListNode* node =
                     source_head->get_next_linked_list_node();
                  node != nullptr;
                  node = node->get_next_linked_list_node()) {
-                LinkedListNode<T>* new_node =
-                    new LinkedListNode<T>(node->get_element(),
+                LinkedListNode* new_node =
+                    new LinkedListNode(node->get_element(),
                                           node->get_weight());
                 
                 m_tail->set_next_linked_list_node(new_node);
