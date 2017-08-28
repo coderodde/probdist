@@ -57,10 +57,77 @@ namespace util {
         };
         
     public:
-        LinkedListProbabilityDistribution() : ProbabilityDistribution<T>() {}
+        LinkedListProbabilityDistribution()
+        :
+        ProbabilityDistribution<T>{},
+        m_head{nullptr},
+        m_tail{nullptr}
+        {}
+        
         LinkedListProbabilityDistribution(std::random_device::result_type seed)
         :
-        ProbabilityDistribution<T>(seed) {}
+        ProbabilityDistribution<T>{seed},
+        m_head{nullptr},
+        m_tail{nullptr}
+        {}
+        
+        LinkedListProbabilityDistribution(
+            const LinkedListProbabilityDistribution<T>& other) {
+            this->m_size             = other.m_size;
+            this->m_total_weight     = other.m_total_weight;
+            m_map                    = other.m_map;
+            
+            // Copy the internal linked list:
+            copy_linked_list(other.m_head);
+        }
+        
+        LinkedListProbabilityDistribution(
+            LinkedListProbabilityDistribution<T>&& other) {
+            this->m_size             = other.m_size;
+            this->m_total_weight     = other.m_total_weight;
+            m_map                    = std::move(other.m_map);
+            m_head                   = other.m_head;
+            m_tail                   = other.m_tail;
+            
+            other.m_size         = 0;
+            other.m_total_weight = 0.0;
+            other.m_head         = nullptr;
+            other.m_tail         = nullptr;
+        }
+        
+        LinkedListProbabilityDistribution& operator=(
+            const LinkedListProbabilityDistribution<T>& other) {
+            this->m_size             = other.m_size;
+            this->m_total_weight     = other.m_total_weight;
+            m_map                    = other.m_map;
+            
+            copy_linked_list(other.m_head);
+            return *this;
+        }
+        
+        LinkedListProbabilityDistribution& operator=(
+            LinkedListProbabilityDistribution<T>&& other) {
+            if (this == &other) {
+                return *this;
+            }
+            
+            this->m_size         = other.m_size;
+            this->m_total_weight = other.m_total_weight;
+            this->m_head         = other.m_head;
+            this->m_tail         = other.m_tail;
+            this->m_map          = std::move(other.m_map);
+            
+            other.m_size         = 0;
+            other.m_total_weight = 0.0;
+            other.m_head         = nullptr;
+            other.m_tail         = nullptr;
+            
+            return *this;
+        }
+
+        ~LinkedListProbabilityDistribution() {
+            delete_linked_list();
+        }
         
         virtual bool add_element(T const& element, double weight) {
             if (m_map.find(element) != m_map.end()) {
@@ -172,6 +239,42 @@ namespace util {
             }
             
             delete node;
+        }
+        
+        void delete_linked_list() {
+            for (LinkedListNode<T>* node = m_head, *next; node != nullptr;) {
+                next = node->get_next_linked_list_node();
+                delete node;
+                node = next;
+            }
+        }
+        
+        void copy_linked_list(LinkedListNode<T>* source_head) {
+            if (source_head == nullptr) {
+                m_head = nullptr;
+                m_tail = nullptr;
+                return;
+            }
+            
+            m_head = m_tail = new LinkedListNode<T>{source_head->get_element(),
+                                                    source_head->get_weight()};
+            
+            m_head->set_prev_linked_list_node(nullptr);
+            
+            for (LinkedListNode<T>* node =
+                    source_head->get_next_linked_list_node();
+                 node != nullptr;
+                 node = node->get_next_linked_list_node()) {
+                LinkedListNode<T>* new_node =
+                    new LinkedListNode<T>(node->get_element(),
+                                          node->get_weight());
+                
+                m_tail->set_next_linked_list_node(new_node);
+                new_node->set_prev_linked_list_node(m_tail);
+                m_tail = new_node;
+            }
+            
+            m_tail->set_next_linked_list_node(nullptr);
         }
     };
             

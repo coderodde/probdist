@@ -29,8 +29,6 @@ namespace util {
         m_real_distribution{0.0, 1.0}
         {}
         
-        
-        
         virtual bool   is_empty() const {
             return m_size == 0;
         }

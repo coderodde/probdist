@@ -5,6 +5,7 @@
 #include <iterator>
 #include <random>
 #include <unordered_set>
+#include <utility>
 #include <vector>
 
 namespace net {
@@ -18,6 +19,60 @@ namespace util {
         ArrayProbabilityDistribution() : ProbabilityDistribution<T>() {}
         ArrayProbabilityDistribution(std::random_device::result_type seed) :
         ProbabilityDistribution<T>(seed) {}
+        
+        ArrayProbabilityDistribution(
+            const ArrayProbabilityDistribution<T>& other) {
+            this->m_size             = other.m_size;
+            this->m_total_weight     = other.m_total_weight;
+            m_element_storage_vector = other.m_element_storage_vector;
+            m_weight_storage_vector  = other.m_weight_storage_vector;
+            m_filter_set             = other.m_filter_set;
+        }
+        
+        ArrayProbabilityDistribution(
+            ArrayProbabilityDistribution<T>&& other) {
+            this->m_size             = other.m_size;
+            this->m_total_weight     = other.m_total_weight;
+            m_element_storage_vector =
+                std::move(other.m_element_storage_vector);
+            
+            m_weight_storage_vector  = std::move(other.m_weight_storage_vector);
+            m_filter_set             = std::move(other.m_filter_set);
+            
+            other.m_size         = 0;
+            other.m_total_weight = 0.0;
+        }
+        
+        ArrayProbabilityDistribution& operator=(
+            const ArrayProbabilityDistribution<T>& other) {
+            this->m_size             = other.m_size;
+            this->m_total_weight     = other.m_total_weight;
+            m_element_storage_vector = other.m_element_storage_vector;
+            m_weight_storage_vector  = other.m_weight_storage_vector;
+            m_filter_set             = other.m_filter_set;
+            return *this;
+        }
+        
+        ArrayProbabilityDistribution& operator=(
+            ArrayProbabilityDistribution<T>&& other) {
+            if (this == &other) {
+                return *this;
+            }
+            
+            this->m_size         = other.m_size;
+            this->m_total_weight = other.m_total_weight;
+            
+            m_element_storage_vector =
+                std::move(other.m_element_storage_vector);
+            
+            m_weight_storage_vector = std::move(other.m_weight_storage_vector);
+            m_filter_set            = std::move(other.m_filter_set);
+            
+            other.m_size         = 0;
+            other.m_total_weight = 0.0;
+            
+            return *this;
+        }
         
         bool is_empty() const {
             return this->m_size == 0;

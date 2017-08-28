@@ -106,10 +106,74 @@ static void test_impl(ProbabilityDistribution<int>* dist) {
 
 static void test_array() {
     test_impl(new ArrayProbabilityDistribution<int>);
+    
+    ArrayProbabilityDistribution<int> dist1;
+    ArrayProbabilityDistribution<int> dist2;
+    
+    for (int i = 0; i < 3; ++i) {
+        dist2.add_element(i, 1.0);
+    }
+    
+    ASSERT(dist1.size() == 0);
+    ASSERT(dist2.size() == 3);
+    
+    dist1 = dist2;
+    
+    ASSERT(dist1.size() == 3);
+    ASSERT(dist2.size() == 3);
+    
+    ArrayProbabilityDistribution<int> dist3(dist1);
+    
+    ASSERT(dist1.size() == 3);
+    ASSERT(dist2.size() == 3);
+    ASSERT(dist3.size() == 3);
+    
+    ArrayProbabilityDistribution<int> dist4;
+    dist4 = std::move(dist1);
+    
+    ASSERT(dist1.size() == 0);
+    ASSERT(dist4.size() == 3);
+    
+    ArrayProbabilityDistribution<int> dist5(std::move(dist2));
+    
+    ASSERT(dist5.size() == 3);
+    ASSERT(dist2.size() == 0);
 }
 
 static void test_linked_list() {
     test_impl(new LinkedListProbabilityDistribution<int>);
+    
+    LinkedListProbabilityDistribution<int> dist1;
+    LinkedListProbabilityDistribution<int> dist2;
+    
+    for (int i = 0; i < 3; ++i) {
+        dist2.add_element(i, 1.0);
+    }
+    
+    ASSERT(dist1.size() == 0);
+    ASSERT(dist2.size() == 3);
+    
+    dist1 = dist2;
+    
+    ASSERT(dist1.size() == 3);
+    ASSERT(dist2.size() == 3);
+    
+    LinkedListProbabilityDistribution<int> dist3(dist1);
+    
+    ASSERT(dist1.size() == 3);
+    ASSERT(dist2.size() == 3);
+    ASSERT(dist3.size() == 3);
+    
+    LinkedListProbabilityDistribution<int> dist4;
+    dist4 = std::move(dist1);
+    
+    ASSERT(dist1.size() == 0);
+    ASSERT(dist4.size() == 3);
+    
+    LinkedListProbabilityDistribution<int> dist5(std::move(dist2));
+    
+    ASSERT(dist5.size() == 3);
+    ASSERT(dist2.size() == 0);
 }
 
 static void test_tree() {
