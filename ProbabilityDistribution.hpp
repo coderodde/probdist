@@ -29,14 +29,19 @@ namespace util {
         m_real_distribution{0.0, 1.0}
         {}
         
-        virtual bool   is_empty       ()                          const = 0;
-        virtual size_t size           ()                          const = 0;
-        virtual bool   add_element    (T const& element,
-                                        double weight)                  = 0;
-        virtual T&     sample_element ()                                = 0;
-        virtual bool   contains       (T const& element)          const = 0;
-        virtual bool   remove         (T const& element)                = 0;
-        virtual void   clear          ()                                = 0;
+        virtual bool   is_empty() const {
+            return m_size == 0;
+        }
+        
+        virtual size_t size() const {
+            return m_size;
+        }
+        
+        virtual bool add_element    (T const& element, double weight) = 0;
+        virtual T&   sample_element ()                                = 0;
+        virtual bool contains       (T const& element)          const = 0;
+        virtual bool remove         (T const& element)                = 0;
+        virtual void clear          ()                                = 0;
 
     protected:
         
