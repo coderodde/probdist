@@ -74,7 +74,6 @@ namespace util {
             const LinkedListProbabilityDistribution<T>& other) {
             this->m_size             = other.m_size;
             this->m_total_weight     = other.m_total_weight;
-            m_map                    = other.m_map;
             
             // Copy the internal linked list:
             copy_linked_list(other.m_head);
@@ -96,11 +95,11 @@ namespace util {
         
         LinkedListProbabilityDistribution& operator=(
             const LinkedListProbabilityDistribution<T>& other) {
-            this->m_size             = other.m_size;
-            this->m_total_weight     = other.m_total_weight;
-            m_map                    = other.m_map;
-            
+            delete_linked_list();
             copy_linked_list(other.m_head);
+            
+            this->m_size         = other.m_size;
+            this->m_total_weight = other.m_total_weight;
             return *this;
         }
         
@@ -109,6 +108,8 @@ namespace util {
             if (this == &other) {
                 return *this;
             }
+            
+            delete_linked_list();
             
             this->m_size         = other.m_size;
             this->m_total_weight = other.m_total_weight;
@@ -195,13 +196,7 @@ namespace util {
             this->m_size = 0;
             this->m_total_weight = 0.0;
             m_map.clear();
-            
-            for (LinkedListNode* node = m_head, *next; node != nullptr;) {
-                next = node->get_next_linked_list_node();
-                delete node;
-                node = next;
-            }
-            
+            delete_linked_list();
             m_head = nullptr;
             m_tail = nullptr;
         }
@@ -254,7 +249,7 @@ namespace util {
             }
             
             m_head = m_tail = new LinkedListNode{source_head->get_element(),
-                                                    source_head->get_weight()};
+                                                 source_head->get_weight()};
             
             m_head->set_prev_linked_list_node(nullptr);
             
@@ -269,6 +264,8 @@ namespace util {
                 m_tail->set_next_linked_list_node(new_node);
                 new_node->set_prev_linked_list_node(m_tail);
                 m_tail = new_node;
+                
+                m_map[new_node->get_element()] = new_node;
             }
             
             m_tail->set_next_linked_list_node(nullptr);

@@ -1,12 +1,17 @@
 #ifndef NET_CODERODDE_UTIL_BINARY_TREE_PROBABILITY_DISTRIBUTION_HPP
 #define NET_CODERODDE_UTIL_BINARY_TREE_PROBABILITY_DISTRIBUTION_HPP
 
+#include "ProbabilityDistribution.hpp"
+#include <unordered_map>
+#include <utility>
+
 namespace net {
 namespace coderodde {
 namespace util {
     
     template<typename T>
-    class BinaryTreeProbabilityDistribution {
+    class BinaryTreeProbabilityDistribution :
+    public ProbabilityDistribution<T> {
     private:
         
         class TreeNode {
@@ -27,7 +32,7 @@ namespace util {
             m_element{element},
             m_weight{weight},
             m_is_relay_node{false},
-            m_leaf_node_count{1}
+            m_leaf_node_count{1},
             m_left_child{nullptr},
             m_right_child{nullptr},
             m_parent{nullptr}
@@ -60,7 +65,7 @@ namespace util {
                 return m_leaf_node_count;
             }
             
-            void set_number_of_leaves(size_t leaf_node_cont) {
+            void set_number_of_leaves(size_t leaf_node_count) {
                 m_leaf_node_count = leaf_node_count;
             }
             
@@ -106,7 +111,7 @@ namespace util {
         
         BinaryTreeProbabilityDistribution(std::random_device::result_type seed)
         :
-        ProbabilityDistribution{seed},
+        ProbabilityDistribution<T>{seed},
         m_root{nullptr}
         {}
         
@@ -114,29 +119,77 @@ namespace util {
             const BinaryTreeProbabilityDistribution<T>& other) {
             this->m_size         = other.m_size;
             this->m_total_weight = other.m_total_weight;
-            m_map                = other.m_map;
             
+            // Copy the internal tree:
             copy_tree(other.m_root);
         }
         
-        bool add_element(T element, double weight) {
+        BinaryTreeProbabilityDistribution(
+            BinaryTreeProbabilityDistribution<T>&& other) {
+            this->m_size         = other.m_size;
+            this->m_total_weight = other.m_total_weight;
+            
+            m_map  = std::move(other.m_map);
+            m_root = other.m_root;
+            
+            other.m_size         = 0;
+            other.m_total_weight = 0.0;
+            other.m_root         = nullptr;
+        }
+        
+        BinaryTreeProbabilityDistribution& operator=(
+            const BinaryTreeProbabilityDistribution<T>& other) {
+            if (this == &other) {
+                return *this;
+            }
+            
+            delete_tree();
+            copy_tree(other.m_root);
+            
+            this->m_size         = other.m_size;
+            this->m_total_weight = other.m_total_weight;
+            return *this;
+        }
+        
+        BinaryTreeProbabilityDistribution& operator=(
+            BinaryTreeProbabilityDistribution<T>&& other) {
+            if (this == &other) {
+                return *this;
+            }
+            
+            delete_tree();
+            
+            this->m_size         = other.m_size;
+            this->m_total_weight = other.m_total_weight;
+            this->m_root         = other.m_root;
+            this->m_map          = std::move(other.m_map);
+            
+            other.m_size         = 0;
+            other.m_total_weight = 0.0;
+            other.m_root         = nullptr;
+            
+            return *this;
+        }
+        
+        virtual bool add_element(T const& element, double weight) {
             if (m_map.find(element) != m_map.end()) {
                 return false;
             }
             
             this->check_weight(weight);
-            insert(new TreeNode{element, weight});
+            TreeNode* new_node = new TreeNode{element, weight};
+            insert(new_node);
             this->m_size++;
             this->m_total_weight += weight;
             m_map[element] = new_node;
             return true;
         }
         
-        bool contains(T const& element) const {
+        virtual bool contains(T const& element) const {
             return m_map.find(element) != m_map.cend();
         }
         
-        T sample_element() {
+        virtual T sample_element() {
             this->check_not_empty();
             double value = this->m_real_distribution(this->m_generator) *
                            this->m_total_weight;
@@ -155,7 +208,7 @@ namespace util {
             return node->get_element();
         }
         
-        bool remove(T const& element) {
+        virtual bool remove(T const& element) {
             if (!contains(element)) {
                 return false;
             }
@@ -166,6 +219,15 @@ namespace util {
             this->m_size--;
             this->m_total_weight -= node->get_weight();
             return true;
+        }
+        
+        virtual void clear() {
+            delete_tree();
+            m_map.clear();
+            
+            m_root               = nullptr;
+            this->m_size         = 0;
+            this->m_total_weight = 0.0;
         }
         
     private:
@@ -258,11 +320,40 @@ namespace util {
             bypass_leaf_node(current_node, new_node);
         }
         
-        void copy_tree(TreeNode* copy_root) {
+        void delete_tree(TreeNode* node) {
+            if (node == nullptr) {
+                return;
+            }
             
+            delete_tree(node->get_left_child());
+            delete_tree(node->get_right_child());
+            delete node;
         }
         
-        std::unordere_map<T, TreeNode*> m_map;
+        void delete_tree() {
+            delete_tree(m_root);
+            m_root = nullptr;
+        }
+        
+        TreeNode* copy_tree_impl(TreeNode* node) {
+            if (node == nullptr) {
+                return nullptr;
+            }
+            
+            TreeNode* new_node = new TreeNode{node->get_element(),
+                                              node->get_weight()};
+            
+            m_map[new_node->get_element()] = new_node;
+            
+            new_node->set_left_child (copy_tree_impl(node->get_left_child()));
+            new_node->set_right_child(copy_tree_impl(node->get_right_child()));
+        }
+        
+        void copy_tree(TreeNode* copy_root) {
+            m_root = copy_tree_impl(copy_root);
+        }
+        
+        std::unordered_map<T, TreeNode*> m_map;
         TreeNode* m_root;
     };
     

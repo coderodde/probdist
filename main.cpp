@@ -1,4 +1,5 @@
 #include "ArrayProbabilityDistribution.hpp"
+#include "BinaryTreeProbabilityDistribution.hpp"
 #include "LinkedListProbabilityDistribution.hpp"
 #include "ProbabilityDistribution.hpp"
 #include "assert.hpp"
@@ -6,6 +7,7 @@
 
 using net::coderodde::util::ProbabilityDistribution;
 using net::coderodde::util::ArrayProbabilityDistribution;
+using net::coderodde::util::BinaryTreeProbabilityDistribution;
 using net::coderodde::util::LinkedListProbabilityDistribution;
 
 static void test_all();
@@ -177,5 +179,5 @@ static void test_linked_list() {
 }
 
 static void test_tree() {
-    
+    test_impl(new BinaryTreeProbabilityDistribution<int>);
 }
