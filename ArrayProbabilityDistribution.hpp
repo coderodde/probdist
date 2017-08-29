@@ -112,12 +112,12 @@ namespace util {
             throw std::logic_error{"Should not get here."};
         }
         
-        virtual bool contains(T const& element) const {
+        virtual bool contains_element(T const& element) const {
             return m_filter_set.find(element) != m_filter_set.cend();
         }
         
-        virtual bool remove(T const& element) {
-            if (!contains(element)) {
+        virtual bool remove_element(T const& element) {
+            if (!contains_element(element)) {
                 return false;
             }
             

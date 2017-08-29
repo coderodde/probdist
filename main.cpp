@@ -46,13 +46,13 @@ static void test_impl(ProbabilityDistribution<int>* dist) {
     ASSERT(dist->is_empty() == false);
     
     for (int i = 0; i < 4; ++i) {
-        ASSERT(dist->contains(i));
+        ASSERT(dist->contains_element(i));
     }
     
-    ASSERT(dist->contains(-1) == false);
+    ASSERT(dist->contains_element(-1) == false);
     
     for (int i = 4; i < 10; ++i) {
-        ASSERT(dist->contains(i) == false);
+        ASSERT(dist->contains_element(i) == false);
     }
     
     for (int i = 0; i < 4; ++i) {
@@ -60,11 +60,11 @@ static void test_impl(ProbabilityDistribution<int>* dist) {
     }
     
     for (int i = 0; i < 4; ++i) {
-        ASSERT(dist->remove(i));
+        ASSERT(dist->remove_element(i));
     }
     
     for (int i = 0; i < 4; ++i) {
-        ASSERT(dist->remove(i) == false);
+        ASSERT(dist->remove_element(i) == false);
     }
     
     try {
@@ -130,29 +130,29 @@ static void test_array() {
     dist2 = std::move(dist1);
     
     for (int i = 10; i < 15; ++i) {
-        ASSERT(dist2.contains(i));
-        ASSERT(dist1.contains(i) == false);
+        ASSERT(dist2.contains_element(i));
+        ASSERT(dist1.contains_element(i) == false);
     }
     
     // Test move constructor:
     ArrayProbabilityDistribution<int> dist6(std::move(dist2));
     
     for (int i = 10; i < 15; ++i) {
-        ASSERT(dist6.contains(i));
-        ASSERT(dist2.contains(i) == false);
+        ASSERT(dist6.contains_element(i));
+        ASSERT(dist2.contains_element(i) == false);
     }
     
     // Test copy constructor:
     ArrayProbabilityDistribution<int> dist7(dist6);
-    dist7.remove(14);
+    dist7.remove_element(14);
     
     for (int i = 10; i < 14; ++i) {
-        ASSERT(dist6.contains(i));
-        ASSERT(dist7.contains(i));
+        ASSERT(dist6.contains_element(i));
+        ASSERT(dist7.contains_element(i));
     }
     
-    ASSERT(dist6.contains(14));
-    ASSERT(dist7.contains(14) == false);
+    ASSERT(dist6.contains_element(14));
+    ASSERT(dist7.contains_element(14) == false);
     
     ASSERT(dist6.size() == 5);
     ASSERT(dist7.size() == 4);
@@ -164,8 +164,8 @@ static void test_array() {
     ASSERT(dist6.size() == 5);
     ASSERT(dist1.size() == 5);
     
-    ASSERT(dist1.remove(11));
-    ASSERT(dist1.remove(13));
+    ASSERT(dist1.remove_element(11));
+    ASSERT(dist1.remove_element(13));
     
     ASSERT(dist6.size() == 5);
     ASSERT(dist1.size() == 3);
@@ -220,29 +220,29 @@ static void test_linked_list() {
     dist2 = std::move(dist1);
     
     for (int i = 10; i < 15; ++i) {
-        ASSERT(dist2.contains(i));
-        ASSERT(dist1.contains(i) == false);
+        ASSERT(dist2.contains_element(i));
+        ASSERT(dist1.contains_element(i) == false);
     }
     
     // Test move constructor:
     LinkedListProbabilityDistribution<int> dist6(std::move(dist2));
     
     for (int i = 10; i < 15; ++i) {
-        ASSERT(dist6.contains(i));
-        ASSERT(dist2.contains(i) == false);
+        ASSERT(dist6.contains_element(i));
+        ASSERT(dist2.contains_element(i) == false);
     }
     
     // Test copy constructor:
     LinkedListProbabilityDistribution<int> dist7(dist6);
-    dist7.remove(14);
+    dist7.remove_element(14);
     
     for (int i = 10; i < 14; ++i) {
-        ASSERT(dist6.contains(i));
-        ASSERT(dist7.contains(i));
+        ASSERT(dist6.contains_element(i));
+        ASSERT(dist7.contains_element(i));
     }
     
-    ASSERT(dist6.contains(14));
-    ASSERT(dist7.contains(14) == false);
+    ASSERT(dist6.contains_element(14));
+    ASSERT(dist7.contains_element(14) == false);
     
     ASSERT(dist6.size() == 5);
     ASSERT(dist7.size() == 4);
@@ -254,8 +254,8 @@ static void test_linked_list() {
     ASSERT(dist6.size() == 5);
     ASSERT(dist1.size() == 5);
     
-    ASSERT(dist1.remove(11));
-    ASSERT(dist1.remove(13));
+    ASSERT(dist1.remove_element(11));
+    ASSERT(dist1.remove_element(13));
     
     ASSERT(dist6.size() == 5);
     ASSERT(dist1.size() == 3);
@@ -312,29 +312,29 @@ static void test_tree() {
     dist2 = std::move(dist1);
     
     for (int i = 10; i < 15; ++i) {
-        ASSERT(dist2.contains(i));
-        ASSERT(dist1.contains(i) == false);
+        ASSERT(dist2.contains_element(i));
+        ASSERT(dist1.contains_element(i) == false);
     }
     
     // Test move constructor:
     BinaryTreeProbabilityDistribution<int> dist6(std::move(dist2));
     
     for (int i = 10; i < 15; ++i) {
-        ASSERT(dist6.contains(i));
-        ASSERT(dist2.contains(i) == false);
+        ASSERT(dist6.contains_element(i));
+        ASSERT(dist2.contains_element(i) == false);
     }
     
     // Test copy constructor:
     BinaryTreeProbabilityDistribution<int> dist7(dist6);
-    dist7.remove(14);
+    dist7.remove_element(14);
     
     for (int i = 10; i < 14; ++i) {
-        ASSERT(dist6.contains(i));
-        ASSERT(dist7.contains(i));
+        ASSERT(dist6.contains_element(i));
+        ASSERT(dist7.contains_element(i));
     }
     
-    ASSERT(dist6.contains(14));
-    ASSERT(dist7.contains(14) == false);
+    ASSERT(dist6.contains_element(14));
+    ASSERT(dist7.contains_element(14) == false);
     
     ASSERT(dist6.size() == 5);
     ASSERT(dist7.size() == 4);
@@ -346,8 +346,8 @@ static void test_tree() {
     ASSERT(dist6.size() == 5);
     ASSERT(dist1.size() == 5);
 
-    ASSERT(dist1.remove(11));
-    ASSERT(dist1.remove(13));
+    ASSERT(dist1.remove_element(11));
+    ASSERT(dist1.remove_element(13));
     
     ASSERT(dist6.size() == 5);
     ASSERT(dist1.size() == 3);
@@ -472,13 +472,13 @@ static void benchmark() {
     start = ct.milliseconds();
     
     for (int element : remove_order_vector) {
-        prob_dist1.remove(element);
+        prob_dist1.remove_element(element);
     }
     
     end = ct.milliseconds();
     
     remove_time = end - start;
-    std::cout << "  remove: " << remove_time << " milliseconds.\n";
+    std::cout << "  remove_element: " << remove_time << " milliseconds.\n";
     std::cout << "  Total: " << (add_time + sample_time + remove_time)
               << " milliseconds.\n";
     
@@ -515,20 +515,17 @@ static void benchmark() {
     start = ct.milliseconds();
     
     for (int element : remove_order_vector) {
-        prob_dist2.remove(element);
+        prob_dist2.remove_element(element);
     }
     
     end = ct.milliseconds();
     
     remove_time = end - start;
-    std::cout << "  remove: " << remove_time << " milliseconds.\n";
+    std::cout << "  remove_element: " << remove_time << " milliseconds.\n";
     std::cout << "  Total: " << (add_time + sample_time + remove_time)
     << " milliseconds.\n";
 
     //// TREE BASED BENCHMARK ////
-    
-    
-    //// LINKED LIST BASED BENCHMARK ////
     std::cout << "BinaryTreeProbabilityDistribution:\n";
     
     add_time = 0;
@@ -560,13 +557,13 @@ static void benchmark() {
     start = ct.milliseconds();
     
     for (int element : remove_order_vector) {
-        prob_dist3.remove(element);
+        prob_dist3.remove_element(element);
     }
     
     end = ct.milliseconds();
     
     remove_time = end - start;
-    std::cout << "  remove: " << remove_time << " milliseconds.\n";
+    std::cout << "  remove_element: " << remove_time << " milliseconds.\n";
     std::cout << "  Total: " << (add_time + sample_time + remove_time)
     << " milliseconds.\n";
 }

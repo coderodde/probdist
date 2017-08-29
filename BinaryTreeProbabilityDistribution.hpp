@@ -185,7 +185,7 @@ namespace util {
             return true;
         }
         
-        virtual bool contains(T const& element) const {
+        virtual bool contains_element(T const& element) const {
             return m_map.find(element) != m_map.end();
         }
         
@@ -208,8 +208,8 @@ namespace util {
             return node->get_element();
         }
         
-        virtual bool remove(T const& element) {
-            if (!contains(element)) {
+        virtual bool remove_element(T const& element) {
+            if (!contains_element(element)) {
                 return false;
             }
             

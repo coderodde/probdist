@@ -173,12 +173,12 @@ namespace util {
             throw std::logic_error{"Should not get here."};
         }
                 
-        virtual bool contains(T const& element) const {
+        virtual bool contains_element(T const& element) const {
             return m_map.find(element) != m_map.end();
         }
                 
-        virtual bool remove(T const& element) {
-            if (!contains(element)) {
+        virtual bool remove_element(T const& element) {
+            if (!contains_element(element)) {
                 return false;
             }
             
